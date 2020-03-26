@@ -21,7 +21,7 @@ function love.load()
     gStateMachine = StateMachine {
         ['play'] = function() return PlayState() end
     }
-    gStateMachine:change('play')
+    gStateMachine:change('play', {level=0})
 
     -- initialize input table
     love.keyboard.keysPressed = {}
@@ -52,6 +52,7 @@ function love.update(dt)
     gStateMachine:update(dt)
 
     love.keyboard.keysPressed = {}
+    Timer.update(dt)
 end
 
 function love.draw()

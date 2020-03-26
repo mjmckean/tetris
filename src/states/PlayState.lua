@@ -30,13 +30,14 @@ function PlayState:init()
     testTromino = Tetromino(18, 6, LETTERS[math.random(7)], 'normal')
 end
 
-function PlayState:enter() 
+function PlayState:enter(def) 
     -- TODO: Enter with level, mode, etc
-    level = 0
+    level = def.level
     mode = "EASY"
     lines_cleared = 0
     top_score = 10000
     current_score = 0
+    calibrateDropSpeed(level)
 end
 
 function PlayState:exit() 
@@ -46,10 +47,12 @@ end
 function PlayState:update(dt) 
     if love.keyboard.keysPressed['a'] then
         level = level - 1 >= 0 and level - 1 or 0
+        calibrateDropSpeed(level)
     end
 
     if love.keyboard.keysPressed['d'] then
         level = level + 1 <= 9 and level + 1 or 9
+        calibrateDropSpeed(level)
     end
 
     if love.keyboard.keysPressed['w'] then
@@ -91,7 +94,7 @@ end
 
 function PlayState:render() 
     -- draw background
-    love.graphics.setColor(LEVEL_COLORS[level][1], LEVEL_COLORS[level][2], LEVEL_COLORS[level][3], 1)
+    love.graphics.setColor(LEVELS[level][1], LEVELS[level][2], LEVELS[level][3], 1)
     love.graphics.draw(gTextures['background'], 0, 0)
     love.graphics.setColor(1, 1, 1, 1)
 
@@ -126,4 +129,11 @@ function PlayState:render()
     -- love.graphics.draw(gTextures['main'], gFrames['blocks'][level]['l'], 80 + 30, 20 + 104)
     -- love.graphics.draw(gTextures['main'], gFrames['blocks'][level]['i_small'], 80 + 20, 20 + 114)
     -- love.graphics.draw(gTextures['main'], gFrames['blocks'][level]['i'], 80 + 30, 20 + 114)
+end
+
+function calibrateDropSpeed(level)
+    Timer.clear()
+    Timer.every(LEVELS[level][4] / 60, function()
+        testTromino:move(0, 1)
+    end)
 end

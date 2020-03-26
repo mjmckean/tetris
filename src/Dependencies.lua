@@ -10,9 +10,9 @@ require 'src/StateMachine'
 require 'src/Util'
 
 -- models
-require 'src/Block'
-require 'src/Container'
-require 'src/Tetromino'
+require 'src/models/Block'
+require 'src/models/Container'
+require 'src/models/Tetromino'
 
 -- game states
 require 'src/states/BaseState'

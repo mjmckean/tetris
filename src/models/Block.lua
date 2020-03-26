@@ -16,8 +16,10 @@ function Block:init(x, y, type, size)
 end
 
 function Block:render(x, y, level)
-    love.graphics.setColor(1, 1, 1, 1)
-    love.graphics.draw(gTextures['main'], gFrames['blocks'][level][self.type][self.size], self.x + x, self.y + y)
+    if self.y + y >= PLAY_BOUNDS.y1 * TILE_SIZE then
+        love.graphics.setColor(1, 1, 1, 1)
+        love.graphics.draw(gTextures['main'], gFrames['blocks'][level][self.type][self.size], self.x + x, self.y + y)
+    end
 end
 
 function Block:collides(blocks)
@@ -27,7 +29,7 @@ end
 function Block:canMove(x, y)
     newX = self.gridX + x
     newY = self.gridY + y
-    return (newX > PLAY_BOUNDS.x1 and newX < PLAY_BOUNDS.x2) and (newY > PLAY_BOUNDS.y1 and newY < PLAY_BOUNDS.y2)
+    return (newX > PLAY_BOUNDS.x1 and newX < PLAY_BOUNDS.x2) and (newY < PLAY_BOUNDS.y2)
 end
 
 function Block:move(x, y)

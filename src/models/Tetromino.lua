@@ -17,8 +17,8 @@ TETROMINOES = {
     ['z'] = {
         [1] = {{0, 0}, {0, 1}, {1, 1}, {-1, 0}},
         [2] = {{0, 0}, {-1, 0}, {-1, 1}, {0, -1}},
-        [3] = {{0, 0}, {0, -1}, {-1, -1}, {1, 0}},
-        [4] = {{0, 0}, {1, 0}, {1, -1}, {0, 1}}
+        [3] = {{0, 0}, {0, 1}, {1, 1}, {-1, 0}},
+        [4] = {{0, 0}, {-1, 0}, {-1, 1}, {0, -1}}
     },
     ['o'] = {
         [1] = {{0, 0}, {0, 1}, {-1, 1}, {-1, 0}},
@@ -29,8 +29,8 @@ TETROMINOES = {
     ['s'] = {
         [1] = {{0, 0}, {1, 0}, {0, 1}, {-1, 1}},
         [2] = {{0, 0}, {0, 1}, {-1, 0}, {-1, -1}},
-        [3] = {{0, 0}, {-1, 0}, {0, -1}, {1, -1}},
-        [4] = {{0, 0}, {0, -1}, {1, 0}, {1, 1}}
+        [3] = {{0, 0}, {1, 0}, {0, 1}, {-1, 1}},
+        [4] = {{0, 0}, {0, 1}, {-1, 0}, {-1, -1}}
     },
     ['l'] = {
         [1] = {{0, 0}, {1, 0}, {-1, 0}, {-1, 1}},
@@ -41,8 +41,8 @@ TETROMINOES = {
     ['i'] = {
         [1] = {{0, 0}, {1, 0}, {2, 0}, {-1, 0}},
         [2] = {{0, 0}, {0, 1}, {0, 2}, {0, -1}},
-        [3] = {{0, 0}, {-1, 0}, {-2, 0}, {1, 0}},
-        [4] = {{0, 0}, {0, -1}, {0, -2}, {0, 1}}
+        [3] = {{0, 0}, {1, 0}, {2, 0}, {-1, 0}},
+        [4] = {{0, 0}, {0, 1}, {0, 2}, {0, -1}}
     }
 }
 
@@ -89,31 +89,36 @@ function Tetromino:move(x, y)
 end
 
 function Tetromino:rotate(direction)
+    -- TODO: rotate away from wall
     if direction == 'right' then
         for i = 2, 4 do
-            newX = TETROMINOES[self.type][self.rotation < 4 and self.rotation + 1 or 1][i][1] - TETROMINOES[self.type][self.rotation][i][1]
-            newY = TETROMINOES[self.type][self.rotation < 4 and self.rotation + 1 or 1][i][2] - TETROMINOES[self.type][self.rotation][i][2]
+            nextX = TETROMINOES[self.type][self.rotation < 4 and self.rotation + 1 or 1][i][1] - TETROMINOES[self.type][self.rotation][i][1]
+            nextY = TETROMINOES[self.type][self.rotation < 4 and self.rotation + 1 or 1][i][2] - TETROMINOES[self.type][self.rotation][i][2]
 
-            if self.blocks[i]:canMove(newX, newY) == false then
+            if self.blocks[i]:canMove(nextX, nextY) == false then
                 return
             end
         end
 
         for i = 2, 4 do
+            newX = TETROMINOES[self.type][self.rotation < 4 and self.rotation + 1 or 1][i][1] - TETROMINOES[self.type][self.rotation][i][1]
+            newY = TETROMINOES[self.type][self.rotation < 4 and self.rotation + 1 or 1][i][2] - TETROMINOES[self.type][self.rotation][i][2]
             self.blocks[i]:move(newX, newY)
         end
         self.rotation = self.rotation < 4 and self.rotation + 1 or 1
     else
         for i = 2, 4 do
-            newX = TETROMINOES[self.type][self.rotation > 1 and self.rotation - 1 or 4][i][1] - TETROMINOES[self.type][self.rotation][i][1]
-            newY = TETROMINOES[self.type][self.rotation > 1 and self.rotation - 1 or 4][i][2] - TETROMINOES[self.type][self.rotation][i][2]
+            nextX = TETROMINOES[self.type][self.rotation > 1 and self.rotation - 1 or 4][i][1] - TETROMINOES[self.type][self.rotation][i][1]
+            nextY = TETROMINOES[self.type][self.rotation > 1 and self.rotation - 1 or 4][i][2] - TETROMINOES[self.type][self.rotation][i][2]
             
-            if self.blocks[i]:canMove(newX, newY) == false then
+            if self.blocks[i]:canMove(nextX, nextY) == false then
                 return
             end
         end
 
         for i = 2, 4 do
+            newX = TETROMINOES[self.type][self.rotation > 1 and self.rotation - 1 or 4][i][1] - TETROMINOES[self.type][self.rotation][i][1]
+            newY = TETROMINOES[self.type][self.rotation > 1 and self.rotation - 1 or 4][i][2] - TETROMINOES[self.type][self.rotation][i][2]
             self.blocks[i]:move(newX, newY)
         end
         self.rotation = self.rotation > 1 and self.rotation - 1 or 4
