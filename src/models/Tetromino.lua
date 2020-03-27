@@ -64,40 +64,34 @@ function Tetromino:init(x, y, type, size)
     self.y = self.blocks[1].y
 end
 
-function Tetromino:render(x, y, level)
+function Tetromino:render(x, y, level, board)
     love.graphics.setColor(1, 1, 1, 1)
     for key, block in pairs(self.blocks) do
-        block:render(x, y, level)
+        block:render(x, y, level, board)
     end
 end
 
-function Tetromino:collides(blocks)
+function Tetromino:move(dx, dy, board)
     for key, block in pairs(self.blocks) do
-        block:collides(blocks)
-    end
-end
-
-function Tetromino:move(x, y)
-    for key, block in pairs(self.blocks) do
-        if block:canMove(x, y) == false then
+        if block:collides(dx, dy, board) then
             return
         end
     end
     for key, block in pairs(self.blocks) do
-        block:move(x, y)
+        block:move(dx, dy)
     end
 end
 
-function Tetromino:rotate(direction)
+function Tetromino:rotate(direction, board)
     -- TODO: rotate away from wall
     if direction == 'right' then
         for i = 2, 4 do
             nextX = TETROMINOES[self.type][self.rotation < 4 and self.rotation + 1 or 1][i][1] - TETROMINOES[self.type][self.rotation][i][1]
             nextY = TETROMINOES[self.type][self.rotation < 4 and self.rotation + 1 or 1][i][2] - TETROMINOES[self.type][self.rotation][i][2]
 
-            if self.blocks[i]:canMove(nextX, nextY) == false then
-                return
-            end
+            -- if self.blocks[i]:collides(nextX, nextY, board) == false then
+            --     return
+            -- end
         end
 
         for i = 2, 4 do
@@ -111,9 +105,9 @@ function Tetromino:rotate(direction)
             nextX = TETROMINOES[self.type][self.rotation > 1 and self.rotation - 1 or 4][i][1] - TETROMINOES[self.type][self.rotation][i][1]
             nextY = TETROMINOES[self.type][self.rotation > 1 and self.rotation - 1 or 4][i][2] - TETROMINOES[self.type][self.rotation][i][2]
             
-            if self.blocks[i]:canMove(nextX, nextY) == false then
-                return
-            end
+            -- if self.blocks[i]:collides(nextX, nextY, board) == false then
+            --     return
+            -- end
         end
 
         for i = 2, 4 do

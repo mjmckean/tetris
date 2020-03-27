@@ -27,6 +27,8 @@ function PlayState:init()
         statsTetrominoes[i] = Tetromino(6.5, 11.5 + (3 * i), LETTERS[i], 'small')
     end
 
+    testBoard = Board(13, 6, 'normal')
+
     testTromino = Tetromino(18, 6, LETTERS[math.random(7)], 'normal')
 end
 
@@ -64,27 +66,33 @@ function PlayState:update(dt)
     end
 
     if love.keyboard.keysPressed['left'] then
-        testTromino:move(-1, 0)
+        gSounds['select']:play()
+        testTromino:move(-1, 0, testBoard)
     end    
     
     if love.keyboard.keysPressed['right'] then
-        testTromino:move(1, 0)
+        gSounds['select']:play()
+        testTromino:move(1, 0, testBoard)
     end    
     
     if love.keyboard.keysPressed['up'] then
-        testTromino:move(0, -1)
+        gSounds['select']:play()
+        testTromino:move(0, -1, testBoard)
     end    
     
     if love.keyboard.keysPressed['down'] then
-        testTromino:move(0, 1)
+        gSounds['select']:play()
+        testTromino:move(0, 1, testBoard)
     end
 
     if love.keyboard.keysPressed['v'] then
-        testTromino:rotate('left')
+        gSounds['select']:play()
+        testTromino:rotate('left', testBoard)
     end
 
     if love.keyboard.keysPressed['b'] then
-        testTromino:rotate('right')
+        gSounds['select']:play()
+        testTromino:rotate('right', testBoard)
     end
 
     if love.keyboard.keysPressed['space'] then
@@ -109,31 +117,16 @@ function PlayState:render()
     
     -- draw stats tetrominoes
     for i, tetromino in pairs(statsTetrominoes) do
-        tetromino:render(0, 0, level)
+        tetromino:render(0, 0, level, testBoard)
     end
 
-    testTromino:render(0, 0, level)
-
-    -- love.graphics.draw(gTextures['main'], gFrames['blocks'][level]['sign'], 80 + 20, 20 + 20)
-    -- love.graphics.draw(gTextures['main'], gFrames['blocks'][level]['t']['small'], 80 + 20, 20 + 54)
-    -- love.graphics.draw(gTextures['main'], gFrames['blocks'][level]['t']['normal'], 80 + 30, 20 + 54)
-    -- love.graphics.draw(gTextures['main'], gFrames['blocks'][level]['j_small'], 80 + 20, 20 + 64)
-    -- love.graphics.draw(gTextures['main'], gFrames['blocks'][level]['j'], 80 + 30, 20 + 64)
-    -- love.graphics.draw(gTextures['main'], gFrames['blocks'][level]['z_small'], 80 + 20, 20 + 74)
-    -- love.graphics.draw(gTextures['main'], gFrames['blocks'][level]['z'], 80 + 30, 20 + 74)
-    -- love.graphics.draw(gTextures['main'], gFrames['blocks'][level]['o_small'], 80 + 20, 20 + 84)
-    -- love.graphics.draw(gTextures['main'], gFrames['blocks'][level]['o'], 80 + 30, 20 + 84)
-    -- love.graphics.draw(gTextures['main'], gFrames['blocks'][level]['s_small'], 80 + 20, 20 + 94)
-    -- love.graphics.draw(gTextures['main'], gFrames['blocks'][level]['s'], 80 + 30, 20 + 94)
-    -- love.graphics.draw(gTextures['main'], gFrames['blocks'][level]['l_small'], 80 + 20, 20 + 104)
-    -- love.graphics.draw(gTextures['main'], gFrames['blocks'][level]['l'], 80 + 30, 20 + 104)
-    -- love.graphics.draw(gTextures['main'], gFrames['blocks'][level]['i_small'], 80 + 20, 20 + 114)
-    -- love.graphics.draw(gTextures['main'], gFrames['blocks'][level]['i'], 80 + 30, 20 + 114)
+    testBoard:render(level)
+    testTromino:render(0, 0, level, testBoard)
 end
 
 function calibrateDropSpeed(level)
     Timer.clear()
     Timer.every(LEVELS[level][4] / 60, function()
-        testTromino:move(0, 1)
+        testTromino:move(0, 1, testBoard)
     end)
 end

@@ -10,6 +10,7 @@ require 'src/StateMachine'
 require 'src/Util'
 
 -- models
+require 'src/models/Board'
 require 'src/models/Block'
 require 'src/models/Container'
 require 'src/models/Tetromino'
@@ -17,6 +18,10 @@ require 'src/models/Tetromino'
 -- game states
 require 'src/states/BaseState'
 require 'src/states/PlayState'
+
+gSounds = {
+    ['select'] = love.audio.newSource('assets/select.wav', 'static')
+}
 
 gTextures = {
     ['main'] = love.graphics.newImage('assets/tetrominoes.png'),
