@@ -69,25 +69,21 @@ function Board:calculateCompletedRows()
 end
 
 function Board:removeCompletedRows()
-    -- fix
-    local clearedRows = 0
-
-    for row = self.height - 1, 0, -1 do
-        for _, completedRow in pairs(self.completedRows) do
-            if completedRow == row then
-                for column = 0, self.width - 1 do
-                    self.tiles[row][column] = nil
-                end
-                clearedRows = clearedRows + 1
-                break
-            else
-                self.tiles[row + clearedRows] = self.tiles[row]
-            end
-        end
-    end
-    for row = 0, clearedRows do
+    for _, row in pairs(self.completedRows) do
         for column = 0, self.width - 1 do
             self.tiles[row][column] = nil
+        end
+    end
+    for _, completedRow in pairs(self.completedRows) do
+        for row = self.height - 1, 0, -1 do
+            if row < completedRow then
+                for column = 1, self.width - 1 do
+                    self.tiles[row + 1][column] = self.tiles[row][column]
+                    if self.tiles[row][column] then
+                        self.tiles[row][column]:move(0, 1)
+                    end
+                end
+            end
         end
     end
 end
@@ -97,7 +93,21 @@ function Board:render(level)
         for column = 0, self.width - 1 do
             if self.tiles[row][column] then
                 self.tiles[row][column]:render(0, 0, level, self)
+                love.graphics.setColor(1, 0, 0, 1)
             end
+            
+            --------------------------------------
+            -- for debugging: kills performance --
+            --------------------------------------
+            -- love.graphics.setColor(1, 0, 0, 1)
+            -- love.graphics.printf(self.tiles[row][column] and self.tiles[row][column].type or 'n',
+            --                     (self.gridX - 1 + column) * TILE_SIZE,
+            --                     (self.gridY - 1 + row) * TILE_SIZE,
+            --                     TILE_SIZE / 0.3,
+            --                     'center',
+            --                     0,
+            --                     0.3)
+            -- love.graphics.setColor(1, 1, 1, 1)
         end
     end
 end

@@ -23,8 +23,10 @@ function PlayState:init()
 
     -- initialize small tetrominoes for stats container
     statsTetrominoes = {}
+    stats = {}
     for i = 1, #LETTERS do
         statsTetrominoes[i] = Tetromino(6.5, 11.5 + (3 * i), LETTERS[i], 'small')
+        stats[i] = 0
     end
 
     -- initialize next tetromino
@@ -101,6 +103,10 @@ function PlayState:update(dt)
     if love.keyboard.keysPressed['space'] then
         generateNextTetromino()
     end
+
+    if love.keyboard.keysPressed['p'] then
+        Timer.clear()
+    end
 end
 
 function PlayState:render() 
@@ -121,6 +127,7 @@ function PlayState:render()
     -- draw stats tetrominoes
     for i, tetromino in pairs(statsTetrominoes) do
         tetromino:render(0, 0, level, testBoard)
+        love.graphics.printf("- " .. tostring(stats[i]), 7 * TILE_SIZE, (8 + (2.2 * i)) * TILE_SIZE, (7 * TILE_SIZE) / 0.5, 'left', 0, 0.5)
     end
 
     -- draw next tetromino
@@ -137,6 +144,7 @@ end
 
 function generateNextTetromino()
     testTromino = Tetromino(18, 6, LETTERS[next], 'normal')
+    stats[next] = stats[next] + 1
     next = math.random(7)
     displayX = next == 7 and 26.5 or (next == 4 and 27.5 or 27)
     displayY = next == 7 and 15.5 or 15
