@@ -51,6 +51,7 @@ function Tetromino:init(x, y, type, size)
     self.rotation = 1
     self.size = size or 'normal'
     self.type = type
+    self.live = true
 
     for i = 1, 4 do
         self.blocks[i] = Block(x + TETROMINOES[self.type][self.rotation][i][1],
@@ -74,6 +75,9 @@ end
 function Tetromino:move(dx, dy, board)
     for key, block in pairs(self.blocks) do
         if block:collides(dx, dy, board) then
+            if dy > 0 then
+                self:dropTetromino(board)
+            end
             return
         end
     end
@@ -83,7 +87,7 @@ function Tetromino:move(dx, dy, board)
 end
 
 function Tetromino:rotate(direction, board)
-    -- TODO: rotate away from wall
+    -- TODO: rotate away from wall & fix collision
     if direction == 'right' then
         for i = 2, 4 do
             nextX = TETROMINOES[self.type][self.rotation < 4 and self.rotation + 1 or 1][i][1] - TETROMINOES[self.type][self.rotation][i][1]
@@ -117,4 +121,14 @@ function Tetromino:rotate(direction, board)
         end
         self.rotation = self.rotation > 1 and self.rotation - 1 or 4
     end
+end
+
+function Tetromino:dropTetromino(board)
+    for k, block in pairs(self.blocks) do
+        board.tiles[block.gridY - board.gridY][block.gridX - board.gridX] = block
+    end
+    if board:calculateCompletedRows() then
+        board:removeCompletedRows()
+    end
+    self.live = false
 end

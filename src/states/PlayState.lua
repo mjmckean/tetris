@@ -7,7 +7,7 @@ CONTAINER_DATA = {
     ['lines'] = {['x'] = 11, ['y'] = 1, ['w'] = 12, ['h'] = 3},
     ['play'] = {['x'] = 11, ['y'] = 4, ['w'] = 12, ['h'] = 22},
     ['scores'] = {['x'] = 23, ['y'] = 1, ['w'] = 8, ['h'] = 9},
-    ['next'] = {['x'] = 23, ['y'] = 11, ['w'] = 6, ['h'] = 7},
+    ['next'] = {['x'] = 23, ['y'] = 11, ['w'] = 7, ['h'] = 7},
     ['level'] = {['x'] = 23, ['y'] = 18, ['w'] = 7, ['h'] = 5}
 }
 
@@ -27,9 +27,12 @@ function PlayState:init()
         statsTetrominoes[i] = Tetromino(6.5, 11.5 + (3 * i), LETTERS[i], 'small')
     end
 
+    -- initialize next tetromino
+    next = math.random(7)
+    generateNextTetromino()
+
     testBoard = Board(13, 6, 'normal')
 
-    testTromino = Tetromino(18, 6, LETTERS[math.random(7)], 'normal')
 end
 
 function PlayState:enter(def) 
@@ -96,7 +99,7 @@ function PlayState:update(dt)
     end
 
     if love.keyboard.keysPressed['space'] then
-        testTromino = Tetromino(18, 6, LETTERS[math.random(7)], 'normal')
+        generateNextTetromino()
     end
 end
 
@@ -120,8 +123,24 @@ function PlayState:render()
         tetromino:render(0, 0, level, testBoard)
     end
 
+    -- draw next tetromino
+    nextTetromino:render(0, 0, level, testBoard)
+
     testBoard:render(level)
-    testTromino:render(0, 0, level, testBoard)
+    if testTromino.live then
+        testTromino:render(0, 0, level, testBoard)
+    else
+        testTromino = nil
+        generateNextTetromino()
+    end
+end
+
+function generateNextTetromino()
+    testTromino = Tetromino(18, 6, LETTERS[next], 'normal')
+    next = math.random(7)
+    displayX = next == 7 and 26.5 or (next == 4 and 27.5 or 27)
+    displayY = next == 7 and 15.5 or 15
+    nextTetromino = Tetromino(displayX, displayY, LETTERS[next], 'normal')
 end
 
 function calibrateDropSpeed(level)

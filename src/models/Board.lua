@@ -69,16 +69,20 @@ function Board:calculateCompletedRows()
 end
 
 function Board:removeCompletedRows()
+    -- fix
     local clearedRows = 0
 
     for row = self.height - 1, 0, -1 do
-        if table.contains(self.completedRows, row) then
-            for column = 0, self.width - 1 do
-                self.tiles[row][column] = nil
+        for _, completedRow in pairs(self.completedRows) do
+            if completedRow == row then
+                for column = 0, self.width - 1 do
+                    self.tiles[row][column] = nil
+                end
+                clearedRows = clearedRows + 1
+                break
+            else
+                self.tiles[row + clearedRows] = self.tiles[row]
             end
-            clearedRows = clearedRows + 1
-        else
-            self.tiles[row + clearedRows] = self.tiles[row]
         end
     end
     for row = 0, clearedRows do
