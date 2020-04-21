@@ -13,11 +13,14 @@ require 'src/Util'
 require 'src/models/Board'
 require 'src/models/Block'
 require 'src/models/Container'
+require 'src/models/Selection'
 require 'src/models/Tetromino'
 
 -- game states
 require 'src/states/BaseState'
 require 'src/states/PlayState'
+require 'src/states/StartState'
+require 'src/states/TitleState'
 
 gSounds = {
     ['select'] = love.audio.newSource('assets/select.wav', 'static')
@@ -35,5 +38,5 @@ gFrames = {
 gFonts = {
     ['small'] = love.graphics.newFont('assets/font.ttf', 8),
     ['medium'] = love.graphics.newFont('assets/font.ttf', 16),
-    ['large'] = love.graphics.newFont('assets/font.ttf', 32)
+    ['large'] = love.graphics.newFont('assets/font.ttf', 64)
 }

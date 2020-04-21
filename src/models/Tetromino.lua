@@ -1,51 +1,5 @@
 Tetromino = Class{}
 
--- tetrominoes and their block positions
-TETROMINOES = {
-    ['t'] = {
-        [1] = {{0, 0}, {1, 0}, {0, 1}, {-1, 0}},
-        [2] = {{0, 0}, {0, 1}, {-1, 0}, {0, -1}},
-        [3] = {{0, 0}, {-1, 0}, {0, -1}, {1, 0}},
-        [4] = {{0, 0}, {0, -1}, {1, 0}, {0, 1}}
-    },
-    ['j'] = {
-        [1] = {{0, 0}, {1, 0}, {1, 1}, {-1, 0}},
-        [2] = {{0, 0}, {0, 1}, {-1, 1}, {0, -1}},
-        [3] = {{0, 0}, {-1, 0}, {-1, -1}, {1, 0}},
-        [4] = {{0, 0}, {0, -1}, {1, -1}, {0, 1}}
-    },
-    ['z'] = {
-        [1] = {{0, 0}, {0, 1}, {1, 1}, {-1, 0}},
-        [2] = {{0, 0}, {-1, 0}, {-1, 1}, {0, -1}},
-        [3] = {{0, 0}, {0, 1}, {1, 1}, {-1, 0}},
-        [4] = {{0, 0}, {-1, 0}, {-1, 1}, {0, -1}}
-    },
-    ['o'] = {
-        [1] = {{0, 0}, {0, 1}, {-1, 1}, {-1, 0}},
-        [2] = {{0, 0}, {0, 1}, {-1, 1}, {-1, 0}},
-        [3] = {{0, 0}, {0, 1}, {-1, 1}, {-1, 0}},
-        [4] = {{0, 0}, {0, 1}, {-1, 1}, {-1, 0}}
-    },
-    ['s'] = {
-        [1] = {{0, 0}, {1, 0}, {0, 1}, {-1, 1}},
-        [2] = {{0, 0}, {0, 1}, {-1, 0}, {-1, -1}},
-        [3] = {{0, 0}, {1, 0}, {0, 1}, {-1, 1}},
-        [4] = {{0, 0}, {0, 1}, {-1, 0}, {-1, -1}}
-    },
-    ['l'] = {
-        [1] = {{0, 0}, {1, 0}, {-1, 0}, {-1, 1}},
-        [2] = {{0, 0}, {0, 1}, {0, -1}, {-1, -1}},
-        [3] = {{0, 0}, {-1, 0}, {1, 0}, {1, -1}},
-        [4] = {{0, 0}, {0, -1}, {0, 1}, {1, 1}}
-    },
-    ['i'] = {
-        [1] = {{0, 0}, {1, 0}, {2, 0}, {-1, 0}},
-        [2] = {{0, 0}, {0, 1}, {0, 2}, {0, -1}},
-        [3] = {{0, 0}, {1, 0}, {2, 0}, {-1, 0}},
-        [4] = {{0, 0}, {0, 1}, {0, 2}, {0, -1}}
-    }
-}
-
 function Tetromino:init(x, y, type, size)
     self.blocks = {}
     self.rotation = 1
@@ -72,36 +26,57 @@ function Tetromino:render(x, y, level, board)
     end
 end
 
-function Tetromino:move(dx, dy, board)
+function Tetromino:move(dx, dy, board, level)
     for key, block in pairs(self.blocks) do
         if block:collides(dx, dy, board) then
             if dy > 0 then
-                self:dropTetromino(board)
+                self:dropTetromino(board, level)
             end
-            return
+            return false
         end
     end
     for key, block in pairs(self.blocks) do
         block:move(dx, dy)
     end
+    return true
 end
 
-function Tetromino:rotate(direction, board)
+function Tetromino:rotate(direction, board, level)
     -- TODO: rotate away from wall & fix collision
+    bounceRight = false
+    bounceLeft = false
+
     if direction == 'right' then
         for i = 2, 4 do
             nextX = TETROMINOES[self.type][self.rotation < 4 and self.rotation + 1 or 1][i][1] - TETROMINOES[self.type][self.rotation][i][1]
             nextY = TETROMINOES[self.type][self.rotation < 4 and self.rotation + 1 or 1][i][2] - TETROMINOES[self.type][self.rotation][i][2]
 
-            -- if self.blocks[i]:collides(nextX, nextY, board) == false then
-            --     return
-            -- end
+            if self.blocks[i]:collides(nextX, nextY, board) then
+                if self.blocks[i].gridX + nextX >= board.gridX + board.width then
+                    bounceLeft = true
+                elseif self.blocks[1].gridX + nextX < board.gridX then
+                    bounceRight = true
+                end
+                -- print(self.blocks[i].gridX, self.blocks[i].gridY, nextX, nextY, board.gridX, board.width)
+            end
         end
+            
+        -- if bounceRight then
+        --     if self:move(1, 0, board) == true then
+        --         self:rotate(direction, board)
+        --         return
+        --     end
+        -- elseif bounceLeft then
+        --     if self:move(-1, 0, board) == true then
+        --         self:rotate(direction, board)
+        --         return
+        --     end
+        -- end
 
         for i = 2, 4 do
             newX = TETROMINOES[self.type][self.rotation < 4 and self.rotation + 1 or 1][i][1] - TETROMINOES[self.type][self.rotation][i][1]
             newY = TETROMINOES[self.type][self.rotation < 4 and self.rotation + 1 or 1][i][2] - TETROMINOES[self.type][self.rotation][i][2]
-            self.blocks[i]:move(newX, newY)
+            self.blocks[i]:move(newX, newY, level)
         end
         self.rotation = self.rotation < 4 and self.rotation + 1 or 1
     else
@@ -109,26 +84,26 @@ function Tetromino:rotate(direction, board)
             nextX = TETROMINOES[self.type][self.rotation > 1 and self.rotation - 1 or 4][i][1] - TETROMINOES[self.type][self.rotation][i][1]
             nextY = TETROMINOES[self.type][self.rotation > 1 and self.rotation - 1 or 4][i][2] - TETROMINOES[self.type][self.rotation][i][2]
             
-            -- if self.blocks[i]:collides(nextX, nextY, board) == false then
-            --     return
-            -- end
+            if self.blocks[i]:collides(nextX, nextY, board) == true then
+                return
+            end
         end
 
         for i = 2, 4 do
             newX = TETROMINOES[self.type][self.rotation > 1 and self.rotation - 1 or 4][i][1] - TETROMINOES[self.type][self.rotation][i][1]
             newY = TETROMINOES[self.type][self.rotation > 1 and self.rotation - 1 or 4][i][2] - TETROMINOES[self.type][self.rotation][i][2]
-            self.blocks[i]:move(newX, newY)
+            self.blocks[i]:move(newX, newY, level)
         end
         self.rotation = self.rotation > 1 and self.rotation - 1 or 4
     end
 end
 
-function Tetromino:dropTetromino(board)
+function Tetromino:dropTetromino(board, level)
     for k, block in pairs(self.blocks) do
         board.tiles[block.gridY - board.gridY][block.gridX - board.gridX] = block
     end
     if board:calculateCompletedRows() then
-        board:removeCompletedRows()
+        board:removeCompletedRows(level)
     end
     self.live = false
 end

@@ -13,15 +13,13 @@ function love.load()
         canvas = false
     })
 
-    -- set music to loop and start
-    -- gSounds['music']:setLooping(true)
-    -- gSounds['music']:play()
-
     -- initialize state machine with all state-returning functions
     gStateMachine = StateMachine {
-        ['play'] = function() return PlayState() end
+        ['play'] = function() return PlayState() end,
+        ['start'] = function() return StartState() end,
+        ['title'] = function() return TitleState() end
     }
-    gStateMachine:change('play', {level=0})
+    gStateMachine:change('title')
 
     -- initialize input table
     love.keyboard.keysPressed = {}

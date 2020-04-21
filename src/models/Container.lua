@@ -1,32 +1,32 @@
 Container = Class{}
 
-function Container:init(container_data)
+function Container:init(containerData)
     -- outline 1
-    self.o1x = container_data.x * TILE_SIZE + 1.5
-    self.o1y = container_data.y * TILE_SIZE + 1.5
-    self.o1w = container_data.w * TILE_SIZE - 3
-    self.o1h = container_data.h * TILE_SIZE - 3
+    self.o1x = containerData.x * TILE_SIZE + 1.5
+    self.o1y = containerData.y * TILE_SIZE + 1.5
+    self.o1w = containerData.w * TILE_SIZE - 3
+    self.o1h = containerData.h * TILE_SIZE - 3
     self.o1 = 'line'
 
     -- outline 2
-    self.o2x = container_data.x * TILE_SIZE + 4
-    self.o2y = container_data.y * TILE_SIZE + 4
-    self.o2w = container_data.w * TILE_SIZE - 8
-    self.o2h = container_data.h * TILE_SIZE - 8
+    self.o2x = containerData.x * TILE_SIZE + 4
+    self.o2y = containerData.y * TILE_SIZE + 4
+    self.o2w = containerData.w * TILE_SIZE - 8
+    self.o2h = containerData.h * TILE_SIZE - 8
     self.o2 = 'line'
 
     -- outline 3
-    self.o3x = container_data.x * TILE_SIZE + 6
-    self.o3y = container_data.y * TILE_SIZE + 6
-    self.o3w = container_data.w * TILE_SIZE - 12
-    self.o3h = container_data.h * TILE_SIZE - 12
+    self.o3x = containerData.x * TILE_SIZE + 6
+    self.o3y = containerData.y * TILE_SIZE + 6
+    self.o3w = containerData.w * TILE_SIZE - 12
+    self.o3h = containerData.h * TILE_SIZE - 12
     self.o3 = 'line'
 
     -- fill
-    self.fill_x = container_data.x * TILE_SIZE + 8
-    self.fill_y = container_data.y * TILE_SIZE + 8
-    self.fill_w = container_data.w * TILE_SIZE - 16
-    self.fill_h = container_data.h * TILE_SIZE - 16
+    self.fill_x = containerData.x * TILE_SIZE + 8
+    self.fill_y = containerData.y * TILE_SIZE + 8
+    self.fill_w = containerData.w * TILE_SIZE - 16
+    self.fill_h = containerData.h * TILE_SIZE - 16
     self.fill = 'fill'
 end
 

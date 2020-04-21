@@ -5,14 +5,16 @@ function Board:init(x, y, mode, width, height)
     self.gridX = x
     self.gridY = y
     self.width = width or 10
-    self.height = height or 20
+    self.height = height or 21
 
     -- coordinate positions
     self.x = (self.gridX - 1) * TILE_SIZE
     self.y = (self.gridY - 1) * TILE_SIZE
 
     self.completedRows = {}
-    self.mode = mode or 'easy'
+    self.mode = mode or 'EASY'
+    self.score = 0
+    self.lines_cleared = 0
 
     self:initializeTiles()
 end
@@ -24,12 +26,12 @@ function Board:initializeTiles()
         self.tiles[row] = {}
 
         for column = 0, self.width - 1 do
-            if self.mode == 'hard' and row > 5 then
+            if self.mode == 'HARD' and row > 5 then
                 self.tiles[row][column] = (math.random(10) < 4) and Block(self.gridX + column,
                                                                         self.gridY + row,
                                                                         LETTERS[math.random(7)])
                                                                 or nil
-            elseif self.mode == 'normal' and row > 10 then
+            elseif self.mode == 'NORMAL' and row > 10 then
                 self.tiles[row][column] = (math.random(10) < 6) and Block(self.gridX + column,
                                                                         self.gridY + row,
                                                                         LETTERS[math.random(7)])
@@ -77,7 +79,7 @@ function Board:removeCompletedRows()
     for _, completedRow in pairs(self.completedRows) do
         for row = self.height - 1, 0, -1 do
             if row < completedRow then
-                for column = 1, self.width - 1 do
+                for column = 0, self.width - 1 do
                     self.tiles[row + 1][column] = self.tiles[row][column]
                     if self.tiles[row][column] then
                         self.tiles[row][column]:move(0, 1)
@@ -86,6 +88,21 @@ function Board:removeCompletedRows()
             end
         end
     end
+    self:addScore(#self.completedRows, level)
+    self.completedRows = {}
+end
+
+function Board:addScore(rows, level)
+    if rows == 1 then
+        self.score = self.score + 100 * (math.floor(level/2) + 1)
+    elseif rows == 2 then
+        self.score = self.score + 400 * (math.floor(level/2) + 1)
+    elseif rows == 3 then
+        self.score = self.score + 900 * (math.floor(level/2) + 1)
+    elseif rows == 4 then
+        self.score = self.score + 2000 * (math.floor(level/2) + 1)
+    end
+    self.lines_cleared = self.lines_cleared + rows
 end
 
 function Board:render(level)
@@ -93,7 +110,6 @@ function Board:render(level)
         for column = 0, self.width - 1 do
             if self.tiles[row][column] then
                 self.tiles[row][column]:render(0, 0, level, self)
-                love.graphics.setColor(1, 0, 0, 1)
             end
             
             --------------------------------------
