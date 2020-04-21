@@ -54,7 +54,7 @@ function StartState:update(dt)
     
     if love.keyboard.keysPressed['up'] then
         gSounds['select']:play()
-        levelSelections[mode]:update(false)
+        levelSelections[level]:update(false)
         if level > 0 then
             level = level - 1
         else

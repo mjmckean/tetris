@@ -50,15 +50,18 @@ function Tetromino:rotate(direction, board, level)
         for i = 2, 4 do
             nextX = TETROMINOES[self.type][self.rotation < 4 and self.rotation + 1 or 1][i][1] - TETROMINOES[self.type][self.rotation][i][1]
             nextY = TETROMINOES[self.type][self.rotation < 4 and self.rotation + 1 or 1][i][2] - TETROMINOES[self.type][self.rotation][i][2]
-
-            if self.blocks[i]:collides(nextX, nextY, board) then
-                if self.blocks[i].gridX + nextX >= board.gridX + board.width then
-                    bounceLeft = true
-                elseif self.blocks[1].gridX + nextX < board.gridX then
-                    bounceRight = true
-                end
-                -- print(self.blocks[i].gridX, self.blocks[i].gridY, nextX, nextY, board.gridX, board.width)
+            
+            if self.blocks[i]:collides(nextX, nextY, board) == true then
+                return
             end
+            -- if self.blocks[i]:collides(nextX, nextY, board) then
+            --     if self.blocks[i].gridX + nextX >= board.gridX + board.width then
+            --         bounceLeft = true
+            --     elseif self.blocks[1].gridX + nextX < board.gridX then
+            --         bounceRight = true
+            --     end
+            --     -- print(self.blocks[i].gridX, self.blocks[i].gridY, nextX, nextY, board.gridX, board.width)
+            -- end
         end
             
         -- if bounceRight then
