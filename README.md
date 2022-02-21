@@ -5,11 +5,9 @@ I decided to recreate one of the first video games that I played and enjoyed (Te
 I began this curriculum having experience with programming; however, I had never attempted to work on any games and did not know where to start.
 Fortunately, Harvard University has an extensive continuing education program that includes an 
 [Introduction to Game Development](https://online-learning.harvard.edu/course/cs50s-introduction-game-development?delta=0) course.
-This course includes discussing and working with a variety of different games, beginning with 2D games (e.g., Pong, Flappy Bird, Pokémon) using the Lua programming lanuage and LÖVE framework
-and then progressing to a few 3D games, working in Unity.
+This course includes discussing and working with a variety of different games, beginning with 2D games (e.g., Pong, Flappy Bird, Pokémon) using the Lua programming lanuage and LÖVE game engine and then progressing to a few 3D games, working in Unity.
 
-I am happy with how much I was able to build in a short time frame. The game most likely has bugs and is not as robust as other
-versions of Tetris currently available, but the core gameplay does work (and is just as fun for me).
+I am happy with how much I was able to build in a short time frame. The game most likely has bugs and is not as robust as other versions of Tetris currently available, but the core gameplay does work (and is just as fun for me).
 
 ## Running on LÖVE
 In order to run this version of Tetris, you will need to install LÖVE (see the [getting started guide](https://love2d.org/wiki/Getting_Started)).

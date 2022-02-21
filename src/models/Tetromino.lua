@@ -8,10 +8,12 @@ function Tetromino:init(x, y, type, size)
     self.live = true
 
     for i = 1, 4 do
-        self.blocks[i] = Block(x + TETROMINOES[self.type][self.rotation][i][1],
-                            y + TETROMINOES[self.type][self.rotation][i][2],
-                            self.type,
-                            size)
+        self.blocks[i] = Block(
+            x + TETROMINOES[self.type][self.rotation][i][1],
+            y + TETROMINOES[self.type][self.rotation][i][2],
+            self.type,
+            size
+        )
     end
 
     -- coordinate positions
